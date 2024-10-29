@@ -1,0 +1,108 @@
+/* Better box sizing and remove default margins */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+/* New stacking context for root etc */
+#root,
+#__next {
+  isolation: isolate;
+}
+
+/* Smooth scrolling */
+html:focus-within {
+  scroll-behavior: smooth;
+}
+
+/*  */
+body {
+  min-height: 100vh;
+  text-rendering: optimizeSpeed;
+  font-size: 1em;
+  font-weight: 400;
+}
+
+/* So that the words won't overflow */
+p, h1, h2, h3, h4, h5, h6 {
+  overflow-wrap: break-word;
+}
+
+/* No more underline! */
+a {
+  text-decoration: none;
+}
+
+/* Lists will have inset markers */
+/* Didn't remove markers because this is only a reset */
+ul li, ol li {
+  list-style: inset;
+}
+
+/* Overlapping table borders */
+table {
+  border-collapse: collapse;
+  border-spacing: 0;
+}
+
+/* Same font and colour for these guys below */
+input,
+button,
+textarea,
+select {
+  font-family: inherit;
+  color: inherit;
+}
+
+/* I hate the existing outline so I'm removing it */
+input:focus,
+select:focus,
+textarea:focus,
+button:focus {
+  outline: none;
+}
+
+/* Easier to work with */
+img,
+picture,
+video,
+canvas {
+  max-width: 100%;
+  display: block;
+}
+
+/* Easier to work with */
+article, aside, details, figcaption,
+footer, header, hgroup, menu, nav, section {
+  display: block;
+}
+
+/* Removing/reducing animations for those that prefer reduced-motion */
+@media (prefers-reduced-motion: reduce) {
+  html:focus-within {
+    scroll-behavior: auto;
+  }
+
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+@media (prefers-color-scheme: dark) {
+  html {
+    color-scheme: dark;
+  }
+
+  body {
+    background-color: black;
+    color: whitesmoke;
+  }
+}

@@ -1,0 +1,91 @@
+.timer_wrapper {
+  font-size: 0.8rem;
+  display: flex;
+  flex-direction: column;
+  text-align: center;
+  gap: 0px;
+  margin-bottom: 2rem;
+
+  #time_left {
+    font-size: 3rem;
+    line-height: 1;
+
+    &.warning {
+      color: red;
+    }
+  }
+}
+
+.form_card {
+  display: grid;
+  place-items: center;
+  height: 100vh;
+  overflow-y: auto;
+
+  &:nth-of-type(2n + 1) {
+    background-color: rgb(255, 230, 234);
+  }
+
+  &:nth-of-type(2n) {
+    background-color: rgb(238, 251, 255);
+  }
+}
+
+.form_card_content {
+  padding: 3rem;
+  max-width: 1200px;
+  counter-reset: question;
+}
+
+.title {
+  text-align: center;
+  margin-bottom: 2rem;
+
+  h1 {
+    margin-bottom: 1rem;
+  }
+}
+
+.input_wrapper {
+  margin-bottom: 1rem;
+
+  label {
+    display: block;
+    font-weight: 500;
+  }
+
+  input {
+    border: 1px solid black;
+    border-radius: 0.4rem;
+    padding: 0.4rem 0.8rem;
+    width: min(100%, 360px);
+  }
+}
+
+.radio_wrapper {
+  margin-bottom: 1.5rem;
+
+  .question {
+    display: block;
+    margin-bottom: 0.5rem;
+    font-weight: 500;
+
+    &::before {
+      counter-increment: question;
+      content: counter(question) '.';
+      margin-right: 0.4rem;
+      color: cornflowerblue;
+      font-weight: 600;
+    }
+  }
+
+  .answer {
+    input {
+      margin-right: 0.4rem;
+    }
+
+    :not(:last-of-type) {
+      margin-bottom: 0.5rem;
+    }
+  }
+}

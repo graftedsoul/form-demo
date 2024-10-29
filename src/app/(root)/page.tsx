@@ -15,15 +15,8 @@ export default function Home() {
 
   const formRef = useRef(null);
   const [currentCard, setCurrentCard] = useState(0);
-  let form_cards: NodeListOf<Element>;
 
   useEffect(() => {
-    if (!formRef.current) return;
-
-    form_cards = (formRef.current as HTMLElement).querySelectorAll(
-      '.form_card'
-    );
-
     // Cleanup interval on unmount
     return () => clearInterval(intervalRef.current);
   }, []);
@@ -66,13 +59,22 @@ export default function Home() {
     intervalRef.current = setInterval(updateTimer, 1000);
   }
 
+  useEffect(() => updateCard(currentCard), [currentCard]);
+
+  function updateCard(card: number) {
+    if (!formRef.current) return;
+
+    const form_cards = (formRef.current as HTMLElement).querySelectorAll(
+      '.form_card'
+    );
+
+    form_cards[card].scrollIntoView();
+  }
+
   function onFormSubmit(e: FormEvent) {
     e.preventDefault();
 
     const form = e.target as HTMLFormElement;
-
-    /* if (form === (formRef.current! as HTMLFormElement))
-      return console.error('Form mismatch error'); */
 
     let correctCount = 0;
     const questions = form.querySelectorAll('input[type="radio"]');
@@ -93,22 +95,6 @@ export default function Home() {
 
   return (
     <main>
-      <div className='title'>
-        <h1>Demo Form</h1>
-        <p>
-          This is a form demo. Complete the quiz (it's biology) within 1 minute
-          and get a score.
-        </p>
-      </div>
-
-      <div className='timer_wrapper'>
-        <span>Time left: </span>
-        <span id='time_left' ref={timerRef}>
-          {timeLeft}
-        </span>
-        <span> seconds</span>
-      </div>
-
       <form
         id='quiz_form'
         action=''
@@ -117,57 +103,82 @@ export default function Home() {
         ref={formRef}
       >
         <div className='form_card'>
-          <div className='input_wrapper'>
-            <label htmlFor='first_name'>First Name</label>
-            <input type='text' name='first_name' id='first_name' required />
-          </div>
+          <div className='form_card_content'>
+            <div className='title'>
+              <h1>Demo Form</h1>
+              <p>
+                This is a form demo. Complete the quiz (it's biology) within 1
+                minute and get a score.
+              </p>
+            </div>
 
-          <div className='input_wrapper'>
-            <label htmlFor='last_name'>Last Name</label>
-            <input type='text' name='last_name' id='last_name' required />
-          </div>
+            <div className='input_wrapper'>
+              <label htmlFor='first_name'>First Name</label>
+              <input type='text' name='first_name' id='first_name' required />
+            </div>
 
-          <button
-            type='button'
-            form='quiz_form'
-            onClick={(e) => onClickNext(e)}
-          >
-            Next
-          </button>
+            <div className='input_wrapper'>
+              <label htmlFor='last_name'>Last Name</label>
+              <input type='text' name='last_name' id='last_name' required />
+            </div>
+
+            <button
+              type='button'
+              form='quiz_form'
+              className='button regular_button lightcoral'
+              onClick={(e) => onClickNext(e)}
+            >
+              Next
+            </button>
+          </div>
         </div>
 
         <div className='form_card'>
-          <div className='questions_wrapper'>
-            {questions &&
-              questions.en.map((q, q_index) => (
-                <div className='radio_wrapper' key={'question_' + q_index}>
-                  <span className='question'>{q.question}</span>
+          <div className='form_card_content'>
+            <div className='timer_wrapper'>
+              <span>Time left: </span>
+              <span id='time_left' ref={timerRef}>
+                {timeLeft}
+              </span>
+              <span> seconds</span>
+            </div>
 
-                  {q.answers.map((a, a_index) => (
-                    <div
-                      className='answer'
-                      key={'q' + q_index + '_answer' + a_index}
-                    >
-                      <input
-                        type='radio'
-                        value={a.answer}
-                        name={'question_' + q_index}
-                        id={'q' + q_index + '_answer' + a_index}
-                        data-is-correct={a.isCorrect}
-                        required
-                      />
-                      <label htmlFor={'q' + q_index + '_answer' + a_index}>
-                        {a.answer}
-                      </label>
-                    </div>
-                  ))}
-                </div>
-              ))}
+            <div className='questions_wrapper'>
+              {questions &&
+                questions.en.map((q, q_index) => (
+                  <div className='radio_wrapper' key={'question_' + q_index}>
+                    <span className='question'>{q.question}</span>
+
+                    {q.answers.map((a, a_index) => (
+                      <div
+                        className='answer'
+                        key={'q' + q_index + '_answer' + a_index}
+                      >
+                        <input
+                          type='radio'
+                          value={a.answer}
+                          name={'question_' + q_index}
+                          id={'q' + q_index + '_answer' + a_index}
+                          data-is-correct={a.isCorrect}
+                          required
+                        />
+                        <label htmlFor={'q' + q_index + '_answer' + a_index}>
+                          {a.answer}
+                        </label>
+                      </div>
+                    ))}
+                  </div>
+                ))}
+            </div>
+
+            <button
+              type='submit'
+              form='quiz_form'
+              className='button regular_button blue'
+            >
+              Submit
+            </button>
           </div>
-
-          <button type='submit' form='quiz_form'>
-            Submit
-          </button>
         </div>
       </form>
     </main>

@@ -1,8 +1,6 @@
 import { fetchEntries } from '@/lib/actions';
 import { ArrowLeftFromLine } from 'lucide-react';
 import Link from 'next/link';
-import { Suspense } from 'react';
-import Loading from '../loading';
 
 export default async function View() {
   const entries = await fetchEntries();
@@ -31,24 +29,16 @@ export default async function View() {
         </thead>
 
         <tbody>
-          <Suspense
-            fallback={
-              <tr>
-                <Loading />
+          {entries &&
+            entries.map((entry, index) => (
+              <tr key={'entry_' + index}>
+                <td className='name'>{entry.first_name}</td>
+                <td className='name'>{entry.last_name}</td>
+                <td className=''>{entry.correct_answers}</td>
+                <td className='number'>{entry.time} seconds</td>
+                <td className='number'>{entry.score}</td>
               </tr>
-            }
-          >
-            {entries &&
-              entries.map((entry, index) => (
-                <tr key={'entry_' + index}>
-                  <td className='name'>{entry.first_name}</td>
-                  <td className='name'>{entry.last_name}</td>
-                  <td className=''>{entry.correct_answers}</td>
-                  <td className='number'>{entry.time} seconds</td>
-                  <td className='number'>{entry.score}</td>
-                </tr>
-              ))}
-          </Suspense>
+            ))}
         </tbody>
       </table>
     </main>

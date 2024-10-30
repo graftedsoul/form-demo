@@ -26,3 +26,16 @@ export async function createEntry(
     console.error('Create entry unsuccessful');
   }
 }
+
+export async function fetchEntries() {
+  try {
+    connectToDB();
+
+    const query = Entry.find({});
+    const entries = await query.exec();
+
+    return entries;
+  } catch (error) {
+    console.error(error);
+  }
+}

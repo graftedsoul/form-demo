@@ -1,0 +1,28 @@
+#entries {
+  height: 100vh;
+  display: grid;
+  place-items: center;
+  background-color: rgb(249, 215, 249);
+}
+
+#entries_table {
+  border-collapse: collapse;
+  width: clamp(800px, 60vw, 1200px);
+
+  th,
+  td {
+    padding: 1rem;
+    text-align: left;
+    border: 1px solid black;
+  }
+
+  th {
+    background-color: darkviolet;
+    color: white;
+    font-weight: 500;
+  }
+
+  td {
+    background-color: whitesmoke;
+  }
+}

@@ -84,8 +84,29 @@
       margin-right: 0.4rem;
     }
 
+    input[data-is-correct='1'] + label {
+      color: hotpink;
+    }
+
     :not(:last-of-type) {
       margin-bottom: 0.5rem;
     }
+  }
+}
+
+#result {
+  display: grid;
+  place-items: center;
+  background-color: rgb(249, 215, 249);
+  font-weight: 500;
+
+  &.success {
+    background-color: rgb(193, 251, 152);
+    color: forestgreen;
+  }
+
+  &.failure {
+    background-color: lightsalmon;
+    color: firebrick;
   }
 }

@@ -1,8 +1,11 @@
 'use client';
 
-import { FormEvent, useEffect, useRef, useState } from 'react';
+import { ChangeEvent, FormEvent, useEffect, useRef, useState } from 'react';
 import { questions } from '../../data/questions';
 import { createEntry } from '@/lib/actions';
+import { Eye } from 'lucide-react';
+import Link from 'next/link';
+import Spinner from './Spinner';
 
 export default function Home() {
   const TIME_ALLOWED = 60; // 1 minute
@@ -42,6 +45,10 @@ export default function Home() {
   function onClickNext(e: any) {
     e.preventDefault();
 
+    const viewLink = document.getElementById('view_link') as HTMLElement;
+    viewLink.classList.remove('lightcoral');
+    viewLink.classList.add('blue');
+
     const button = e.target as HTMLButtonElement;
     const card = button.parentElement as HTMLElement;
 
@@ -71,30 +78,111 @@ export default function Home() {
     form_cards[card].scrollIntoView();
   }
 
-  function onFormSubmit(e: FormEvent) {
+  function handleChange(e: ChangeEvent) {
+    console.log('Change event fired');
+    const radio = e.target as HTMLInputElement;
+    const radio_group = document.getElementsByName(radio.name);
+
+    for (let i = 0; i < radio_group.length; i++) {
+      (radio_group[i] as HTMLInputElement).removeAttribute('checked');
+    }
+
+    radio.setAttribute('checked', 'true');
+  }
+
+  async function onFormSubmit(e: FormEvent) {
     e.preventDefault();
+
+    clearInterval(intervalRef.current);
+
+    // result page
+    const result = document.getElementById('result') as HTMLElement;
+    result.scrollIntoView();
+
+    const viewLink = document.getElementById('view_link') as HTMLElement;
+    viewLink.classList.remove('lightcoral');
+    viewLink.classList.remove('blue');
+    viewLink.classList.add('dark');
 
     const form = e.target as HTMLFormElement;
 
     let correctCount = 0;
-    const questions = form.querySelectorAll('input[type="radio"]');
+    const questions = form.querySelectorAll(
+      'input[type="radio"][checked="true"]'
+    );
 
-    for (let q = 0; q < questions.length; q) {
+    for (let q = 0; q < questions.length; q++) {
       correctCount += Number(
         (questions[q] as HTMLInputElement).dataset.isCorrect!
       );
     }
 
+    console.log(questions);
     console.log(correctCount);
 
     const formData = new FormData(form);
 
-    const first_name = formData.get('first_name');
-    const last_name = formData.get('last_name');
+    const first_name = formData.get('first_name')!.toString();
+    const last_name = formData.get('last_name')!.toString();
+
+    let multiplier = 0;
+
+    if (timeLeft <= 5) {
+      multiplier = 0;
+    } else if (timeLeft <= 15) {
+      multiplier = 0.2;
+    } else if (timeLeft <= 25) {
+      multiplier = 0.4;
+    } else if (timeLeft <= 40) {
+      multiplier = 0.6;
+    } else if (timeLeft <= 60) {
+      multiplier = 0.8;
+    }
+
+    const score = correctCount + correctCount * multiplier;
+
+    const newEntry = await createEntry(
+      first_name,
+      last_name,
+      correctCount + ' / ' + questions.length,
+      TIME_ALLOWED - timeLeft,
+      score
+    );
+
+    let message = '';
+    let messageElement = document.createElement('p');
+
+    const spinner = document.getElementById('spinner');
+    spinner!.style.display = 'none';
+
+    if (!newEntry) {
+      message = 'Entry creation has failed. Try again later.';
+      result.classList.add('failure');
+    } else {
+      message = 'Entry was successful!';
+      result.classList.add('success');
+    }
+
+    messageElement.innerText = message;
+    result.appendChild(messageElement);
   }
 
   return (
     <main>
+      <Link
+        className='button reveal_button lightcoral'
+        id='view_link'
+        href='/view'
+      >
+        <div className='icon_wrapper'>
+          <Eye />
+        </div>
+
+        <div className='text_wrapper'>
+          <span className='link_text'>View Entries</span>
+        </div>
+      </Link>
+
       <form
         id='quiz_form'
         action=''
@@ -160,6 +248,7 @@ export default function Home() {
                           name={'question_' + q_index}
                           id={'q' + q_index + '_answer' + a_index}
                           data-is-correct={a.isCorrect}
+                          onChange={(e) => handleChange(e)}
                           required
                         />
                         <label htmlFor={'q' + q_index + '_answer' + a_index}>
@@ -181,6 +270,12 @@ export default function Home() {
           </div>
         </div>
       </form>
+
+      <section className='full_width full_height' id='result'>
+        <div id='spinner'>
+          <Spinner />
+        </div>
+      </section>
     </main>
   );
 }

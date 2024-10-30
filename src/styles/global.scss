@@ -1,5 +1,7 @@
 @use './base/reset';
 @use './components/form';
+@use './components/table';
+@use './components/loader';
 @use 'sass:color';
 
 @import url('https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap');
@@ -37,6 +39,26 @@ body {
     }
   }
 
+  &.violet {
+    background-color: darkorchid;
+    transition: background-color 0.3s ease-in-out;
+
+    &:hover {
+      background-color: color.adjust($color: darkorchid, $lightness: -20%);
+      transition: background-color 0.3s ease-in-out;
+    }
+  }
+
+  &.dark {
+    background-color: black;
+    transition: background-color 0.3s ease-in-out;
+
+    &:hover {
+      background-color: color.adjust($color: black, $lightness: 20%);
+      transition: background-color 0.3s ease-in-out;
+    }
+  }
+
   &.regular_button {
     padding: 0.6rem 1.2rem;
     border-radius: 0.6rem;
@@ -48,6 +70,29 @@ body {
     background-color: transparent;
     transition: all 0.3s ease-in-out;
     opacity: 0.6;
+    position: fixed;
+    top: 1rem;
+    left: 1rem;
+
+    &.lightcoral .icon_wrapper,
+    &.lightcoral .text_wrapper {
+      background-color: lightcoral;
+    }
+
+    &.blue .icon_wrapper,
+    &.blue .text_wrapper {
+      background-color: cornflowerblue;
+    }
+
+    &.violet .icon_wrapper,
+    &.violet .text_wrapper {
+      background-color: darkviolet;
+    }
+
+    &.dark .icon_wrapper,
+    &.dark .text_wrapper {
+      background-color: black;
+    }
 
     .icon_wrapper {
       display: flex;
@@ -55,7 +100,6 @@ body {
       justify-content: center;
       height: 100%;
       z-index: 2;
-      background-color: lightcoral;
       padding: 0.6rem;
       border-radius: 9999px;
 
@@ -70,7 +114,6 @@ body {
       align-items: center;
       width: 0px;
       overflow: hidden;
-      background-color: lightcoral;
       margin-left: -1.5rem;
       padding: 0;
       transition: all 0.3s ease-in-out;
@@ -96,4 +139,17 @@ body {
       }
     }
   }
+}
+
+.full_width {
+  width: 100vw;
+}
+
+.full_height {
+  height: 100vh;
+}
+
+.place_center {
+  display: grid;
+  place-items: center;
 }

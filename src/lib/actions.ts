@@ -2,6 +2,7 @@
 
 import { connectToDB } from './mongoose';
 import Entry from './entry.model';
+import { revalidatePath } from 'next/cache';
 
 export async function createEntry(
   first_name: string,
@@ -20,6 +21,8 @@ export async function createEntry(
       time: time,
       score: score,
     });
+
+    revalidatePath('/view');
 
     return new_entry !== null;
   } catch (error) {

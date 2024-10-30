@@ -33,7 +33,7 @@ export default function Home() {
         clearInterval(intervalRef.current);
 
         if (!timeoutCalledRef.current) {
-          // timeOut();
+          onTimeOut();
           timeoutCalledRef.current = true;
         }
 
@@ -76,6 +76,31 @@ export default function Home() {
     );
 
     form_cards[card].scrollIntoView();
+  }
+
+  function onTimeOut() {
+    clearInterval(intervalRef.current);
+
+    // result page
+    const result = document.getElementById('result') as HTMLElement;
+    result.scrollIntoView();
+
+    const viewLink = document.getElementById('view_link') as HTMLElement;
+    viewLink.classList.remove('lightcoral');
+    viewLink.classList.remove('blue');
+    viewLink.classList.add('dark');
+
+    let message = '';
+    let messageElement = document.createElement('p');
+
+    const spinner = document.getElementById('spinner');
+    spinner!.style.display = 'none';
+
+    message = 'Sorry, you ran out of time.';
+    result.classList.add('failure');
+
+    messageElement.innerText = message;
+    result.appendChild(messageElement);
   }
 
   function handleChange(e: ChangeEvent) {

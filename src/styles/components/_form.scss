@@ -84,9 +84,9 @@
       margin-right: 0.4rem;
     }
 
-    input[data-is-correct='1'] + label {
+    /* input[data-is-correct='1'] + label {
       color: hotpink;
-    }
+    } */
 
     :not(:last-of-type) {
       margin-bottom: 0.5rem;
